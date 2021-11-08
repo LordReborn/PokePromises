@@ -1,74 +1,53 @@
 import fetch from "node-fetch";
-console.time("test");
 
-const pikachu = "https://pokeapi.co/api/v2/pokemon/pikachu";
-const charizard = "https://pokeapi.co/api/v2/pokemon/charizard";
-const charmander = "https://pokeapi.co/api/v2/pokemon/charmander";
-
-const pokemonsURL = [
-  charmander,
-  charmander,
-  charmander,
-  charmander,
-  charmander,
-  charmander,
-  charmander,
-  charmander,
-  charmander,
-  charmander,
-  charmander,
-  charmander,
-  charmander,
-  charmander,
-  charmander,
-  charmander,
-  charmander,
-  charmander,
-  charmander,
-  charmander,
-  charmander,
-  charmander,
-  charmander,
-  charmander,
-  charmander,
-  charmander,
-  charmander,
-  charmander,
-  charmander,
-  charmander,
-  charmander,
-  charmander,
-  charmander,
-  charmander,
-  charmander,
-  charmander,
-  charmander,
-  charmander,
-  charmander,
-  charmander,
-  charmander,
-  charmander,
-  charmander,
-  charmander,
-  charmander,
-  charmander,
-  charmander,
-  charmander,
-  charmander,
-  charmander,
-  charmander,
-];
-
-const createPromises = (pokemonsURL) => {
-  return pokemonsURL.map((pokemonURL) => fetch(pokemonURL));
+const createArrayPokemonsURL = (pokemons) => {
+  return pokemons.map(
+    (pokemon) => `https://pokeapi.co/api/v2/pokemon/${pokemon}`
+  );
 };
 
-const fetchPokemons = (pokemonsURL) => {
-  const promises = createPromises(pokemonsURL);
-  Promise.all(promises).then((pokemons) => {
-    console.log(pokemons);
-    pokemons ? console.timeEnd("test") : console.log("cargando");
-  });
+const createPromises = (ArrayPokemonsURL) => {
+  return ArrayPokemonsURL.map((pokemonURL) => fetch(pokemonURL));
 };
 
-fetchPokemons(pokemonsURL);
+const fetchPokemons = async (pokemons) => {
+  const arrayPokemonsURL = createArrayPokemonsURL(pokemons);
+  const promises = createPromises(arrayPokemonsURL);
+  const response = Promise.all(promises)
+    .then((responses) =>
+      Promise.all(responses.map((response) => response.json()))
+    )
+    .catch((error) => console.log(error));
+  return response;
+};
+
+const getPokemons = async () => {
+  const pokemons = [
+    "bulbasaur",
+    "ivysaur",
+    "venusaur",
+    "charmander",
+    "charmeleon",
+    "charizard",
+    "squirtle",
+    "wartortle",
+    "blastoise",
+    "caterpie",
+    "metapod",
+    "butterfree",
+    "weedle",
+    "kakuna",
+    "beedrill",
+    "pidgey",
+    "pidgeotto",
+    "pidgeot",
+    "rattata",
+    "raticate",
+  ];
+  console.time("test");
+  const response = await fetchPokemons(pokemons);
+  console.log(response);
+  console.timeEnd("test");
+};
+
+getPokemons();

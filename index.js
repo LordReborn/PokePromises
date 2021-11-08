@@ -13,10 +13,10 @@ const createPromises = (pokemonsURL) => {
 
 const fetchPokemons = (pokemonsURL) => {
   const promises = createPromises(pokemonsURL);
-  Promise.all(promises).then(
-    console.log("Resolvi todas las promesas"),
-    console.timeEnd("test")
-  );
+  Promise.all(promises).then((pokemons) => {
+    console.log(pokemons);
+    pokemons ? console.timeEnd("test") : console.log("cargando");
+  });
 };
 
 fetchPokemons(pokemonsURL);
